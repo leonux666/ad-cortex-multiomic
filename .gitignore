@@ -1,0 +1,11 @@
+# data and outputs are rebuildable; only code, config and docs are tracked
+data/*
+!data/.gitkeep
+results/*
+!results/.gitkeep
+logs/*
+!logs/.gitkeep
+*.h5
+*.h5ad
+__pycache__/
+.ipynb_checkpoints/
