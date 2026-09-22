@@ -1,0 +1,23 @@
+# Built 2026-09-22 on Rutgers Amarel (RHEL 9.6, A100-PCIE-40GB, NVIDIA driver 570).
+# Versions are what the solver picked on that date, pinned after the GPU import test passed.
+# torch must be a cu128 build: the default cu130 wheel hangs on import under driver 570.
+# On GPU nodes, export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH before running
+# (system libstdc++ is too old for conda's scipy when torch loads first).
+name: sc
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11.16
+  - scanpy=1.11.5
+  - anndata=0.12.19
+  - numpy=2.4.6
+  - pandas=2.3.3
+  - scipy=1.17.1
+  - leidenalg=0.12.0
+  - python-igraph=1.0.0
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu128
+      - torch==2.11.0+cu128
+      - scvi-tools==1.4.2
+      - snapatac2==2.9.0
