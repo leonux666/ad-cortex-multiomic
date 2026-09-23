@@ -37,9 +37,17 @@ def main():
         obs.loc[idx, "flag_low_genes"] = low_outlier(obs.loc[idx, "log1p_n_genes_by_counts"].values, MAD_K)
     obs["flag_high_mt"] = obs["pct_counts_mt"] > MT_MAX
 
-    # scrublet per sample; scanpy runs it separately for each batch_key level
-    sc.pp.scrublet(adata, batch_key="sample", random_state=0)
-    obs["flag_doublet"] = obs["predicted_doublet"].astype(bool)
+    # scrublet per sample: doublet rate depends on each sample's loading, so
+    # each sample gets its own simulated-doublet model and its own threshold
+    score = pd.Series(np.nan, index=obs.index)
+    pred = pd.Series(False, index=obs.index)
+    for s in obs["sample"].unique():
+        sub = adata[obs["sample"] == s].copy()
+        sc.pp.scrublet(sub, random_state=0, verbose=False)
+        score[sub.obs_names] = sub.obs["doublet_score"].values
+        pred[sub.obs_names] = sub.obs["predicted_doublet"].astype(bool).values
+    obs["doublet_score"] = score
+    obs["flag_doublet"] = pred
 
     flags = ["flag_low_counts", "flag_low_genes", "flag_high_mt", "flag_doublet"]
     obs["qc_pass"] = ~obs[flags].any(axis=1)
