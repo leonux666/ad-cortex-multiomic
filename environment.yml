@@ -22,3 +22,5 @@ dependencies:
       - torch==2.11.0+cu128
       - scvi-tools==1.4.2
       - snapatac2==2.9.0
+      - harmonypy==2.0.2
+      - scib-metrics==0.5.10
