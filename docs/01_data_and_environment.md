@@ -37,9 +37,9 @@ Column order differs between the two tables.
 Both tables carry the authors' `Cell.Type` labels. These are used as one of two annotation tracks for
 comparison, not as ground truth.
 
-Barcode suffixes differ: snRNA barcodes all end in `-1` and may not be unique across samples; snATAC barcodes
-carry a per-sample suffix (e.g. `-13`). Sample assignment therefore relies on the metadata table, not on the
-barcode string. Barcode uniqueness inside each h5 is checked in the next step before any QC.
+Barcode suffixes: snRNA barcodes carry a per-sample suffix `-1` to `-18`, snATAC `-1` to `-20`; both are
+unique within their h5 and the suffix maps one-to-one to a sample. Sample assignment uses the suffix; the
+metadata table supplies donor covariates. Verified 2026-09-23 (`src/01_load.py` asserts both properties).
 
 ## Experimental design
 
